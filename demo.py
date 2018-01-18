@@ -10,9 +10,9 @@ import time
 GPIO.setmode(GPIO.BOARD)
 
 hand_pin = 11
-base_pin = 12
-left_pin = 15
-right_pin = 16
+base_pin = 16
+left_pin = 12
+right_pin = 15
 
 GPIO.setup(hand_pin, GPIO.OUT)
 GPIO.setup(base_pin, GPIO.OUT)
