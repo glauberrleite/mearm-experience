@@ -62,10 +62,10 @@ class MeArm:
         GPIO.setup(handServoPin, GPIO.OUT)
         
         # Instantiating PWM
-        self.base = GPIO.PWM(baseServoPin, servoFreq)
-        self.left = GPIO.PWM(leftServoPin, servoFreq)
-        self.right = GPIO.PWM(rightServoPin, servoFreq)
-        self.hand = GPIO.PWM(handServoPin, servoFreq)
+        self.base = GPIO.PWM(baseServoPin, self.servoFreq)
+        self.left = GPIO.PWM(leftServoPin, self.servoFreq)
+        self.right = GPIO.PWM(rightServoPin, self.servoFreq)
+        self.hand = GPIO.PWM(handServoPin, self.servoFreq)
         
         # Starting PWM and defining initial Duty Cycle
         self.base.start(7)
