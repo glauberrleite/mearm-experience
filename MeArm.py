@@ -17,7 +17,7 @@ class MeArm:
     servoFreq = 50
 
 
-    def mapping(value,  anglesLimits, limits):
+    def __mapping(self, value,  anglesLimits, limits):
         'A function that translates a value within a range of angles to a value within the DutyCycle Limits'
         span = anglesLimits[1] - anglesLimits[0]
         
@@ -25,22 +25,22 @@ class MeArm:
         return limits[0] + (scaled * (limits[1] - limits[0]))
 
     def setBase(self, value):
-        dutyCycle = mapping(value, baseAngles, baseLimits)
+        dutyCycle = self.mapping(value, baseAngles, baseLimits)
         self.base.ChangeDutyCycle(dutyCycle)
         time(1)
 
     def setLeft(self, value):
-        dutyCycle = mapping(value, leftAngles, leftLimits)
+        dutyCycle = self.mapping(value, leftAngles, leftLimits)
         self.left.ChangeDutyCycle(dutyCycle)
         time(1)
 
     def setRight(self, value):
-        dutyCycle = mapping(value, rightAngles, rightLimits)
+        dutyCycle = self.mapping(value, rightAngles, rightLimits)
         self.right.ChangeDutyCycle(dutyCycle)
         time(1)
 
     def setHand(self, value):
-        dutyCycle = mapping(value, handAngles, handLimits)
+        dutyCycle = self.mapping(value, handAngles, handLimits)
         self.right.ChangeDutyCycle(dutyCycle)
         time(1)
 
