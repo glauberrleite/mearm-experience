@@ -3,37 +3,44 @@ import time
 
 class MeArm:
     'An interface for GPIO operations in MeArm robotic arm'
-    # Limits
-    baseLimits = [3, 10]
-    leftLimits = [5, 11]
-    rightLimits = [5, 10]
+    # Servo DutyCycle Limits based on its place at the Arm 
+    baseLimits = [4, 10]
+    leftLimits = [5, 10]
+    rightLimits = [3.5, 10]
     handLimits = [8, 9.9]
+    # Angles limits for each servo
+    baseAngles = [-45, 45]
+    leftAngles = [-75, 0]
+    rightAngles = [-30, 90]
+    handAngles = [0, 100]
     # Servo Frequency
     servoFreq = 50
 
 
-    def mapping(value, limits):
-        'A function that translates a value within a range to the relative between 0 and 100'
-        span = limits[1] - limits[0]
-        return 100*float(value - limits[0])/float(span)
+    def mapping(value,  anglesLimits, limits):
+        'A function that translates a value within a range of angles to a value within the DutyCycle Limits'
+        span = angleLimits[1] - angleLimits[0]
+        
+        scaled = float(value - angleLimits[0])/float(span)
+        return limits[0] + (scaled * (limits[1] - limits[0]))
 
     def setBase(self, value):
-        dutyCycle = mapping(value, baseLimits)
+        dutyCycle = mapping(value, baseAngles, baseLimits)
         self.base.ChangeDutyCycle(dutyCycle)
         time(1)
 
     def setLeft(self, value):
-        dutyCycle = mapping(value, leftLimits)
+        dutyCycle = mapping(value, leftAngles, leftLimits)
         self.left.ChangeDutyCycle(dutyCycle)
         time(1)
 
     def setRight(self, value):
-        dutyCycle = mapping(value, rightLimits)
+        dutyCycle = mapping(value, rightAngles, rightLimits)
         self.right.ChangeDutyCycle(dutyCycle)
         time(1)
 
     def setHand(self, value):
-        dutyCycle = mapping(value, handLimits)
+        dutyCycle = mapping(value, handAngles, handLimits)
         self.right.ChangeDutyCycle(dutyCycle)
         time(1)
 
@@ -44,8 +51,10 @@ class MeArm:
         self.left.stop()
         self.right.stop()
         self.hand.stop()
+        GPIO.cleanup()
     
     def __init__(self, baseServoPin, leftServoPin, rightServoPin, handServoPin):
+        GPIO.setmode(GPIO.BOARD)
         # Setting pins as outputs
         GPIO.setup(baseServoPin, GPIO.OUT)
         GPIO.setup(leftServoPin, GPIO.OUT)
@@ -59,8 +68,8 @@ class MeArm:
         self.hand = GPIO.PWM(handServoPin, servoFreq)
         
         # Starting PWM and defining initial Duty Cycle
-        self.base.start(7.5)
+        self.base.start(7)
         self.left.start(8)
-        self.right.start(5)
+        self.right.start(4.7)
         self.hand.start(9.9)
 
