@@ -25,24 +25,24 @@ class MeArm:
         return limits[0] + (scaled * (limits[1] - limits[0]))
 
     def setBase(self, value):
-        dutyCycle = self.mapping(value, baseAngles, baseLimits)
+        dutyCycle = self.__mapping(value, self.baseAngles, self.baseLimits)
         self.base.ChangeDutyCycle(dutyCycle)
-        time(1)
+        time.sleep(1)
 
     def setLeft(self, value):
-        dutyCycle = self.mapping(value, leftAngles, leftLimits)
+        dutyCycle = self.__mapping(value, self.leftAngles, self.leftLimits)
         self.left.ChangeDutyCycle(dutyCycle)
-        time(1)
+        time.sleep(1)
 
     def setRight(self, value):
-        dutyCycle = self.mapping(value, rightAngles, rightLimits)
+        dutyCycle = self.__mapping(value, self.rightAngles, self.rightLimits)
         self.right.ChangeDutyCycle(dutyCycle)
-        time(1)
+        time.sleep(1)
 
     def setHand(self, value):
-        dutyCycle = self.mapping(value, handAngles, handLimits)
-        self.right.ChangeDutyCycle(dutyCycle)
-        time(1)
+        dutyCycle = self.__mapping(value, self.handAngles, self.handLimits)
+        self.hand.ChangeDutyCycle(dutyCycle)
+        time.sleep(1)
 
     
     def closeConn(self):
