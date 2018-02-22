@@ -61,12 +61,13 @@ class MeArm:
                 + numpy.arccos((x**2 + y**2 + z**2 + l1**2 - l2**2)\
                 /(2 * l1 * numpy.sqrt(x**2 + y**2 + z**2)))
 
-        theta3 = numpy.arccos((x**2 + y**2 + z**2 - l1**2 - l2**2)/(2 * l1 * l2))
+        #theta3 = numpy.arccos((x**2 + y**2 + z**2 - l1**2 - l2**2)/(2 * l1 * l2))
+        theta3 = numpy.arccos((numpy.sqrt(x**2 + y**2) - l1 * numpy.cos(theta2))/l2)
 
         # To degrees
         theta1 = theta1 * 180 / numpy.pi
         theta2 = theta2 * 180 / numpy.pi
-        theta3 = theta3 * 180 / numpy.pi
+        theta3 = -(theta3 * 180 / numpy.pi)
         
         return [theta1, theta2, theta3]
 
@@ -75,8 +76,13 @@ class MeArm:
         l1 = 8.0
         l2 = 12.0
         offset = 7.5
-        
+
         [theta1, theta2, theta3] = self.__invkine(x, y, z, l1, l2, offset)
+
+        if self.verbose:
+            print("theta1 = " + str(theta1))
+            print("theta2 = " + str(theta2))
+            print("theta3 = " + str(theta3))
 
         self.setBase(theta1)
         self.setRight(theta2)
@@ -90,7 +96,7 @@ class MeArm:
         self.hand.stop()
         GPIO.cleanup()
     
-    def __init__(self, baseServoPin, leftServoPin, rightServoPin, handServoPin):
+    def __init__(self, baseServoPin, leftServoPin, rightServoPin, handServoPin, verbose=False):
         GPIO.setmode(GPIO.BOARD)
         # Setting pins as outputs
         GPIO.setup(baseServoPin, GPIO.OUT)
@@ -109,4 +115,6 @@ class MeArm:
         self.left.start(8)
         self.right.start(4.7)
         self.hand.start(9.9)
+
+        self.verbose = verbose
 
