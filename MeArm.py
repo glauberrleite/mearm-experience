@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+import numpy
 import time
 
 class MeArm:
@@ -11,17 +12,23 @@ class MeArm:
     # Angles limits for each servo
     baseAngles = [-45, 45]
     leftAngles = [-75, 0]
-    rightAngles = [-20, 90]
+    rightAngles = [-120, 0]
     handAngles = [0, 100]
     # Servo Frequency
     servoFreq = 50
-
 
     def __mapping(self, value,  anglesLimits, limits):
         'A function that translates a value within a range of angles to a value within the DutyCycle Limits'
         span = anglesLimits[1] - anglesLimits[0]
         
         scaled = float(value - anglesLimits[0])/float(span)
+
+        # A little limit to avoid miscalculation
+        if scaled > 1:
+            scaled = 1
+        elif scaled < 0:
+            scaled = 0
+
         return limits[0] + (scaled * (limits[1] - limits[0]))
 
     def setBase(self, value):
@@ -35,7 +42,7 @@ class MeArm:
         time.sleep(1)
 
     def setRight(self, value):
-        dutyCycle = self.__mapping(value, self.rightAngles, self.rightLimits)
+        dutyCycle = self.__mapping(-value, self.rightAngles, self.rightLimits)
         self.right.ChangeDutyCycle(dutyCycle)
         time.sleep(1)
 
@@ -44,7 +51,37 @@ class MeArm:
         self.hand.ChangeDutyCycle(dutyCycle)
         time.sleep(1)
 
-    
+    # Inverse Kinematics
+    def __invkine(self, x, y, z, l1, l2, offset):
+        z = z - offset
+
+        theta1 = numpy.arctan2(y, x)
+
+        theta2 = numpy.arctan2(z, numpy.sqrt(x**2 + y**2)) \
+                + numpy.arccos((x**2 + y**2 + z**2 + l1**2 - l2**2)\
+                /(2 * l1 * numpy.sqrt(x**2 + y**2 + z**2)))
+
+        theta3 = numpy.arccos((x**2 + y**2 + z**2 - l1**2 - l2**2)/(2 * l1 * l2))
+
+        # To degrees
+        theta1 = theta1 * 180 / numpy.pi
+        theta2 = theta2 * 180 / numpy.pi
+        theta3 = theta3 * 180 / numpy.pi
+        
+        return [theta1, theta2, theta3]
+
+    def setPos(self, x, y, z):
+        'Given x, y and z, will put the hand at that location'
+        l1 = 8.0
+        l2 = 12.0
+        offset = 7.5
+        
+        [theta1, theta2, theta3] = self.__invkine(x, y, z, l1, l2, offset)
+
+        self.setBase(theta1)
+        self.setRight(theta2)
+        self.setLeft(theta3)
+
     def closeConn(self):
         'Stops PWM and closes GPIO connection'
         self.base.stop()
