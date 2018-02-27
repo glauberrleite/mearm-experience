@@ -61,7 +61,6 @@ class MeArm:
                 + numpy.arccos((x**2 + y**2 + z**2 + l1**2 - l2**2)\
                 /(2 * l1 * numpy.sqrt(x**2 + y**2 + z**2)))
 
-        #theta3 = numpy.arccos((x**2 + y**2 + z**2 - l1**2 - l2**2)/(2 * l1 * l2))
         theta3 = numpy.arccos((numpy.sqrt(x**2 + y**2) - l1 * numpy.cos(theta2))/l2)
 
         # To degrees
@@ -74,8 +73,8 @@ class MeArm:
     def setPos(self, x, y, z):
         'Given x, y and z, will put the hand at that location'
         l1 = 8.0
-        l2 = 12.0
-        offset = 7.5
+        l2 = 8.0
+        offset = 6.0
 
         [theta1, theta2, theta3] = self.__invkine(x, y, z, l1, l2, offset)
 
