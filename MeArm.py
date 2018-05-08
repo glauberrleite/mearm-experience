@@ -51,6 +51,11 @@ class MeArm:
         self.hand.ChangeDutyCycle(dutyCycle)
         time.sleep(1)
 
+    def setTheta(self, theta):
+        self.setBase(theta[0]);
+        self.setRight(theta[1]);
+        self.setLeft(theta[2]);
+
     # Inverse Kinematics
     def __invkine(self, x, y, z, l1, l2, offset):
         z = z - offset
