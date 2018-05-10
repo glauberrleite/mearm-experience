@@ -11,12 +11,12 @@ xd = kinematics.fkm(thetad)
 
 error = 1
 epsilon = 0.001
-K = 1
+dt = 1
 
 while np.linalg.norm(error) > epsilon:
     x = kinematics.fkm(theta)
     J = kinematics.jacobian(theta)
     error = vec8(xd - x)
-    theta = theta + K * (np.linalg.pinv(J) @ error)
+    theta = theta + (np.linalg.pinv(J) @ error) * dt
 
     print(theta)

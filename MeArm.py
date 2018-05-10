@@ -12,7 +12,7 @@ class MeArm:
     # Angles limits for each servo
     baseAngles = [-45, 45]
     leftAngles = [-75, 0]
-    rightAngles = [-120, 0]
+    rightAngles = [-90, 30]
     handAngles = [0, 100]
     # Servo Frequency
     servoFreq = 50
@@ -34,22 +34,22 @@ class MeArm:
     def setBase(self, value):
         dutyCycle = self.__mapping(value, self.baseAngles, self.baseLimits)
         self.base.ChangeDutyCycle(dutyCycle)
-        time.sleep(1)
+        time.sleep(0.5)
 
     def setLeft(self, value):
         dutyCycle = self.__mapping(value, self.leftAngles, self.leftLimits)
         self.left.ChangeDutyCycle(dutyCycle)
-        time.sleep(1)
+        time.sleep(0.5)
 
     def setRight(self, value):
-        dutyCycle = self.__mapping(-value, self.rightAngles, self.rightLimits)
+        dutyCycle = self.__mapping(value, self.rightAngles, self.rightLimits)
         self.right.ChangeDutyCycle(dutyCycle)
-        time.sleep(1)
+        time.sleep(0.5)
 
     def setHand(self, value):
         dutyCycle = self.__mapping(value, self.handAngles, self.handLimits)
         self.hand.ChangeDutyCycle(dutyCycle)
-        time.sleep(1)
+        time.sleep(0.5)
 
     def setTheta(self, theta):
         self.setBase(theta[0]);
