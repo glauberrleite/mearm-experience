@@ -1,4 +1,7 @@
 #include <Servo.h> 
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(12, 11, 10, 8, 7, 2);
 Servo base;
 Servo left;
 Servo right;
@@ -7,8 +10,10 @@ int basePin = 3;
 int rightPin = 5;
 int leftPin = 6;
 int handPin = 9;
+int testButtonPin = 13;
 int startingTheta[] = {0, 0, 0};
 int * theta;
+int buttonState = 0;
 
 String getValue(String data, char separator, int index)
 {
@@ -29,11 +34,13 @@ String getValue(String data, char separator, int index)
 void setup(){
 
     Serial.begin(9600);
+    lcd.begin(16, 2);
     
     base.attach(basePin);
     left.attach(leftPin);
     right.attach(rightPin);
     hand.attach(handPin);
+    pinMode(testButtonPin, INPUT);
 
     theta = startingTheta;
     setTheta(theta);
@@ -93,6 +100,34 @@ void setHand(int closure) {
   hand.write(value);
 }
 
+void testMotors() {
+  setBase(-60);
+  delay(500);
+  setBase(60);
+  delay(500);
+  setBase(0);
+  delay(500);
+  
+  setRight(-45);
+  delay(500);
+  setRight(150);
+  delay(500);
+  setRight(0);
+  delay(500);
+  
+  setLeft(20);
+  delay(500);
+  setLeft(-70);
+  delay(500);
+  setLeft(0);
+  delay(500);
+
+  setHand(0);
+  delay(500);
+  setHand(100);
+  delay(500);
+}
+
 String readSerialString() {
   
   String content = "";
@@ -111,6 +146,15 @@ String readSerialString() {
 }
 
 void loop(){
+    buttonState = digitalRead(testButtonPin);
+
+    if (buttonState == HIGH) {
+      lcd.clear();
+      lcd.print("Testing motors");
+      testMotors();
+      delay(100);
+    }
+  
     if (Serial.available() > 0) { 
 
         String content = readSerialString();
@@ -133,7 +177,7 @@ void loop(){
           theta[1] = getValue(content, ',', 2).toInt();
           theta[2] = getValue(content, ',', 3).toInt();
 
-          show = "Angles moved to: t1 = ";
+          show = "t1 = ";
           show.concat(theta[0]);
           show.concat(", t2 = ");
           show.concat(theta[1]);
@@ -144,5 +188,9 @@ void loop(){
         } else show = "Received an unkown command";
 
         Serial.println(show);
+        lcd.clear();
+        //lcd.setCursor(0, 0);
+        //lcd.autoscroll();
+        lcd.print(show);
     }
 }
