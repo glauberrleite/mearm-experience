@@ -40,8 +40,8 @@ class MeArmKinematics:
         q = np.zeros(8);
 
         q[0] = np.cos(theta[2]/2)*np.cos(pi/4);
-        q[1] = np.cos(theta[2]/2)*np.sin(pi/4);
-        q[2] = -np.sin(theta[2]/2)*np.sin(pi/4);
+        q[1] = -np.cos(theta[2]/2)*np.sin(pi/4);
+        q[2] = np.sin(theta[2]/2)*np.sin(pi/4);
         q[3] = -np.sin(theta[2]/2)*np.cos(pi/4);
 
         x_4 = DQ(q);
@@ -97,8 +97,8 @@ class MeArmKinematics:
         q = np.zeros(8);
 
         q[0] = -(1/2)*np.sin(theta[2]/2)*np.cos(pi/4);
-        q[1] = -(1/2)*np.sin(theta[2]/2)*np.sin(pi/4);
-        q[2] = -(1/2)*np.cos(theta[2]/2)*np.sin(pi/4);
+        q[1] = (1/2)*np.sin(theta[2]/2)*np.sin(pi/4);
+        q[2] = (1/2)*np.cos(theta[2]/2)*np.sin(pi/4);
         q[3] = -(1/2)*np.cos(theta[2]/2)*np.cos(pi/4);
 
         dx_4_dtheta_3 = DQ(q);
