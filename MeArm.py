@@ -1,6 +1,5 @@
 import pigpio
 import numpy
-import time
 
 class MeArm:
     'An interface for GPIO operations in MeArm robotic arm'
@@ -88,6 +87,10 @@ class MeArm:
 
     def closeConn(self):
         'Stops PWM and closes GPIO connection'
+        self.pi.set_servo_pulsewidth(self.baseServoPin, 0)
+        self.pi.set_servo_pulsewidth(self.rightServoPin, 0)
+        self.pi.set_servo_pulsewidth(self.leftServoPin, 0)
+        self.pi.set_servo_pulsewidth(self.handServoPin, 0)
         self.pi.stop()
     
     def __init__(self, baseServoPin, leftServoPin, rightServoPin, handServoPin, verbose=False):
