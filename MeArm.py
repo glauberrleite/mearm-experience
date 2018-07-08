@@ -37,7 +37,7 @@ class MeArm:
         self.pi.set_servo_pulsewidth(self.leftServoPin, theta3)
 
     def setRight(self, value):
-        theta2 = self.__mapping(value, self.rightAngles, self.rightLimits)
+        theta2 = self.__mapping(-value, self.rightAngles, self.rightLimits)
         self.pi.set_servo_pulsewidth(self.rightServoPin, theta2)
 
     def setHand(self, value):

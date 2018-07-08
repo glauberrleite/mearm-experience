@@ -1,6 +1,6 @@
 from DQ import *
 import numpy as np
-from math import pi
+from numpy import pi
 
 class MeArmKinematics:
     L_1 = 8
