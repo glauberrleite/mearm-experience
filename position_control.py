@@ -1,5 +1,5 @@
 from MeArmKinematics import MeArmKinematics
-from MeArm import MeArm
+#from MeArm import MeArm
 from DQ import *
 import numpy as np
 import time
@@ -12,7 +12,7 @@ else:
     position = np.array([float(sys.argv[1]), float(sys.argv[2]), float(sys.argv[3])])
 
 kinematics = MeArmKinematics()
-mearm = MeArm(baseServoPin = 4, rightServoPin = 17, leftServoPin = 27, handServoPin = 22)
+#mearm = MeArm(baseServoPin = 4, rightServoPin = 17, leftServoPin = 27, handServoPin = 22)
 
 theta = np.array([0, 0, 0])
 
@@ -31,13 +31,14 @@ while np.linalg.norm(error) > epsilon:
     x = kinematics.fkm(theta)
     J = kinematics.jacobian(theta)
     error = vec8(xd - x)
-    theta = theta + np.linalg.pinv(J) @ error * dt
 
-    mearm.setTheta(theta * 180/np.pi)
+    theta = theta + np.dot(np.linalg.pinv(J), error) * dt
+
+#    mearm.setTheta(theta * 180/np.pi)
 
     time.sleep(0.0001)
     print(theta * 180 / np.pi)
 
-mearm.setHand(95)
-input()
-mearm.closeConn()
+#mearm.setHand(95)
+raw_input()
+#mearm.closeConn()
